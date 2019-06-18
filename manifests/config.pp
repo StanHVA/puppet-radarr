@@ -3,7 +3,7 @@
 #
 # @api private
 #
-class ntp::config {
+class radarr::config {
 
   notify { 'some-notify':
     name    => 'super',

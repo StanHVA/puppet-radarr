@@ -6,7 +6,7 @@ radarr::epel_manage: true
 radarr::service_enable: true
 radarr::service_ensure: running
 radarr::service_manage: true
-radarr::service_name: ntpd
+radarr::service_name: radarr
 radarr::service_provider: ~
 radarr::service_hasstatus: true
 radarr::service_hasrestart: true
