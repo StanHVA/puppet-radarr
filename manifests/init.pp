@@ -24,7 +24,7 @@ class radarr (
   Boolean $service_hasrestart = true,
   Boolean $install_latest   = true,
   String  $radarr_install_path  = '/opt/radarr',
-  String  $radarr_download_url  = 'https://github.com/Radarr/Radarr/archive/v0.2.0.2.tar.gz',
+  String  $download_url  = 'https://github.com/Radarr/Radarr/archive/v0.2.0.2.tar.gz',
 
 ) {
 
