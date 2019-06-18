@@ -48,7 +48,7 @@ class radarr::install {
     mode   => '0755',
   }
 
-  file { ${radarr::radarr_install_path}/data :
+  file { "${radarr::radarr_install_path}/data" :
     ensure => 'directory',
     owner  => 'radarr',
     group  => 'radarr',

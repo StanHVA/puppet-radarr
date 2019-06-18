@@ -1,4 +1,4 @@
-  # radarr
+# radarr
 #
 # Main class, includes all other classes.
 
