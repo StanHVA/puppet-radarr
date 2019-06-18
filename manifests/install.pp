@@ -32,7 +32,6 @@ class radarr::install {
   }
   -> exec { 'untar':
     command => "/bin/tar -xvf /tmp/radarr.tar.gz -C ${puppet::puppet_install_path}",
-    require => File['/tmp/radarr.tar.gz'],
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
   }
   -> exec { 'clean':
