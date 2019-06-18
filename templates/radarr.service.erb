@@ -1,0 +1,20 @@
+## FILE  MANGED BY PUPPET
+# DO NOT EDIT
+
+[Unit]
+Description=Radarr Daemon
+After=syslog.target network.target
+
+[Service]
+User=radarr
+Group=radarr
+
+Type=simple
+
+ExecStart=/usr/bin/mono --debug <%= @radarr_install_path -%>/Radarr.exe -nobrowser -data=<<%= @radarr_install_path -%>/data>
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
