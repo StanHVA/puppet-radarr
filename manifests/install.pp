@@ -30,7 +30,6 @@ class radarr::install {
     command => "/usr/bin/curl -o /tmp/radarr.tar.gz -s ${download_url}",
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
     timeout => 600,
-    before  => File["${gitlab::git_home}/.gitlab_database_done"],
   }
   -> exec { 'untar':
     command => "/bin/tar -xvf /tmp/radarr.tar.gz -C ${puppet::puppet_install_path}",
@@ -42,14 +41,14 @@ class radarr::install {
     unless  => '/usr/bin/test -f /tmp/radarr.tar.gz',
   }
 
-  file { "{${radarr::radarr_install_path}}" :
+  file { "${radarr::radarr_install_path}" :
     ensure => 'directory',
     owner  => 'radarr',
     group  => 'radarr',
     mode   => '0755',
   }
 
-  file { "{${radarr::radarr_install_path}}/data" :
+  file { ${radarr::radarr_install_path}/data :
     ensure => 'directory',
     owner  => 'radarr',
     group  => 'radarr',

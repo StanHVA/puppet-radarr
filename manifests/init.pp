@@ -4,11 +4,11 @@
 
 class radarr () {
 
-  contain ntp::install
-  contain ntp::config
-  contain ntp::service
+  contain radarr::install
+  contain radarr::config
+  contain radarr::service
 
-  Class['::ntp::install']
-  -> Class['::ntp::config']
-  ~> Class['::ntp::service']
+  Class['::radarr::install']
+  -> Class['::radarr::config']
+  ~> Class['::radarr::service']
 }
