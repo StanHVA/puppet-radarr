@@ -26,7 +26,6 @@ class radarr::install {
   }
 
   exec { 'download tarball':
-    cwd     => "$/tmp",
     command => "/usr/bin/curl -o /tmp/radarr.tar.gz -s ${download_url}",
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
     timeout => 600,
