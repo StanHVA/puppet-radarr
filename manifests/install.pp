@@ -33,7 +33,8 @@ class radarr::install {
   }
 
   if $radarr::install_latest {
-    $download_url = inline_template("<%= `curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4` %>")
+    $download_url = "https://github.com/Radarr/Radarr/releases/download/v0.2.0.1344/Radarr.develop.0.2.0.1344.linux.tar.gz"
+#    #$download_url = inline_template("<%= `curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4` %>")
   }
   else {
     $download_url = $radarr::download_url
