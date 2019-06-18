@@ -3,7 +3,6 @@
 # Main class, includes all other classes.
 
 class radarr () {
-  # defaults for tinker and panic are different, when running on virtual machines
 
   contain ntp::install
   contain ntp::config
