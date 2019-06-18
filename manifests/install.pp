@@ -5,6 +5,20 @@
 #
 class radarr::install {
 
+  group { 'radarr':
+        ensure => 'present',
+  }
+
+  user { 'radarr':
+    ensure  => 'present',
+    home    => '/opt/radarr',
+    password => '!!',
+    password_max_age    => '99999',
+    password_min_age    => '0',
+    shell               => '/bin/bash',
+    groups                              => [ 'radarr' ],
+  }
+
   if $radarr::package_manage {
 
     if $radarr::epel_manage {
@@ -26,12 +40,14 @@ class radarr::install {
   }
 
   exec { 'download tarball':
+    cwd     => "$/tmp",
     command => "/usr/bin/curl -o /tmp/radarr.tar.gz -s ${download_url}",
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
     timeout => 600,
   }
   -> exec { 'untar':
     command => "/bin/tar -xvf /tmp/radarr.tar.gz -C ${puppet::puppet_install_path}",
+    require => File['/tmp/radarr.tar.gz'],
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
   }
   -> exec { 'clean':
@@ -46,7 +62,7 @@ class radarr::install {
     mode   => '0755',
   }
 
-  file { "${radarr::radarr_install_path}/data" :
+  file { ${radarr::radarr_install_path}/data :
     ensure => 'directory',
     owner  => 'radarr',
     group  => 'radarr',
