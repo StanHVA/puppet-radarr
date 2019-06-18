@@ -16,7 +16,6 @@ class radarr::service {
       ensure     => $radarr::service_ensure,
       enable     => $radarr::service_enable,
       name       => $radarr::service_name,
-      provider   => $radarr::service_provider,
       hasstatus  => $radarr::service_hasstatus,
       hasrestart => $radarr::service_hasrestart,
     }
