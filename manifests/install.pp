@@ -47,7 +47,7 @@ class radarr::install {
     timeout => 600,
   }
   -> exec { 'untar':
-    command => "/bin/tar -xzf --strip-components=1 /tmp/radarr.tar.gz -C ${radarr::radarr_install_path}",
+    command => "/bin/tar -xzf /tmp/radarr.tar.gz --strip-components=1 -C ${radarr::radarr_install_path}",
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
   }
   -> exec { 'clean':
