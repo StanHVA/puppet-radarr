@@ -13,10 +13,8 @@ class radarr::install {
     ensure  => 'present',
     home    => '/opt/radarr',
     password => '!!',
-    password_max_age    => '99999',
-    password_min_age    => '0',
-    shell               => '/bin/bash',
-    groups => [ 'radarr' ],
+    shell => '/sbin/nologin',
+    groups => 'radarr'
   }
 
   if $radarr::package_manage {
@@ -48,13 +46,16 @@ class radarr::install {
   }
   -> exec { 'download tarball':
     command => "/usr/bin/curl -o /tmp/radarr.tar.gz -sL ${download_url}",
+    onlyif => '/usr/bin/test -e ${radarr::radarr_install_path}/Radarr.exe',
     timeout => 600,
   }
   -> exec { 'untar':
     command => "/bin/tar -xzf /tmp/radarr.tar.gz --strip-components=1 -C ${radarr::radarr_install_path}",
+    onlyif => '/usr/bin/test -e ${radarr::radarr_install_path}/Radarr.exe',
   }
   -> exec { 'clean':
     command => '/usr/bin/rm /tmp/radarr.tar.gz',
+    onlyif => '/usr/bin/test -e ${radarr::radarr_install_path}/Radarr.exe',
   }
   -> exec { 'chown':
     command => "/usr/bin/chown radarr:radarr -R ${radarr::radarr_install_path}",
