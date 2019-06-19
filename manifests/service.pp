@@ -9,7 +9,7 @@ class radarr::service {
 
   file { '/etc/systemd/system/radarr.service':
     ensure  => file,
-    content => template('radarr/radarr.service.erb'),
+    content => epp('radarr/radarr.service.epp', {'path' => $radarr::radarr_install_path}),
   }
 
     service { 'radarr':

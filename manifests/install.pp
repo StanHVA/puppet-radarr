@@ -33,20 +33,21 @@ class radarr::install {
   }
 
   if $radarr::install_latest {
-    $download_url = "https://github.com/Radarr/Radarr/releases/download/v0.2.0.1344/Radarr.develop.0.2.0.1344.linux.tar.gz"
-#    #$download_url = inline_template("<%= `curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4` %>")
+    $download_url = inline_template('<%= `curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d " -f 4` %>')
   }
   else {
     $download_url = $radarr::download_url
   }
 
+   $download_url = generate('/bin/sh', '-c', '/usr/bin/curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \'"\' -f 4')
+  
   exec { 'download tarball':
-    command => "/usr/bin/curl -o /tmp/radarr.tar.gz -s ${download_url}",
+    command => "/usr/bin/curl -Ls -o /tmp/radarr.tar.gz ${download_url}",
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
     timeout => 600,
   }
   -> exec { 'untar':
-    command => "/bin/tar -xzf /tmp/radarr.tar.gz -C ${radarr::radarr_install_path}",
+    command => "/bin/tar -xzf --strip-components=1 /tmp/radarr.tar.gz -C ${radarr::radarr_install_path}",
     unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
   }
   -> exec { 'clean':
