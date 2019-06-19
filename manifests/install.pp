@@ -32,28 +32,7 @@ class radarr::install {
     }
   }
 
-  if $radarr::install_latest {
-    $download_url = inline_template('<%= `curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d " -f 4` %>')
-  }
-  else {
-    $download_url = $radarr::download_url
-  }
-
-   $download_url = generate('/bin/sh', '-c', '/usr/bin/curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \'"\' -f 4')
-  
-  exec { 'download tarball':
-    command => "/usr/bin/curl -Ls -o /tmp/radarr.tar.gz ${download_url}",
-    unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
-    timeout => 600,
-  }
-  -> exec { 'untar':
-    command => "/bin/tar -xzf /tmp/radarr.tar.gz --strip-components=1 -C ${radarr::radarr_install_path}",
-    unless  => "/usr/bin/test -f ${radarr::radarr_install_path}",
-  }
-  -> exec { 'clean':
-    command => '/usr/bin/rm /tmp/radarr.tar.gz',
-    unless  => '/usr/bin/test -f /tmp/radarr.tar.gz',
-  }
+  $download_url = generate('/bin/sh', '-c', '/usr/bin/curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \'"\' -f 4')
 
   file { "${radarr::radarr_install_path}" :
     ensure => 'directory',
@@ -61,12 +40,23 @@ class radarr::install {
     group  => 'radarr',
     mode   => '0755',
   }
-
-  file { "${radarr::radarr_install_path}/data" :
+  -> file { "${radarr::radarr_install_path}/data" :
     ensure => 'directory',
     owner  => 'radarr',
     group  => 'radarr',
     mode   => '0755',
   }
-
+  -> exec { 'download tarball':
+    command => "/usr/bin/curl -o /tmp/radarr.tar.gz -sL ${download_url}",
+    timeout => 600,
+  }
+  -> exec { 'untar':
+    command => "/bin/tar -xzf /tmp/radarr.tar.gz --strip-components=1 -C ${radarr::radarr_install_path}",
+  }
+  -> exec { 'clean':
+    command => '/usr/bin/rm /tmp/radarr.tar.gz',
+  }
+  -> exec { 'chown':
+    command => "/usr/bin/chown radarr:radarr -R ${radarr::radarr_install_path}",
+  }
 }
